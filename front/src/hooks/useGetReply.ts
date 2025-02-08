@@ -1,7 +1,7 @@
 import { useState } from "react";
 import axios from "axios";
 
-export function useGetReply(context: any, fileName?: string | null) {
+export function useGetReply(context: any, fileName?: File | null) {
   const apiUrl = "http://localhost:8000";
 
   const [loading, setLoading] = useState(false);
@@ -17,9 +17,18 @@ export function useGetReply(context: any, fileName?: string | null) {
     setLoading(true);
 
     try {
-      const response = await axios.get(`${apiUrl}/test/`, {
-        // message,
+      // Create FormData and append the file
+      const formData = new FormData();
+      formData.append("file", fileName);
+      formData.append("message", message);
+
+      const response = await axios.post(`${apiUrl}/document/`, formData, {
+        headers: {
+          "Content-Type": "multipart/form-data",
+        },
       });
+
+      console.log(response.data);
       context.addMessage({ message, reply: response.data.message });
     } catch (err) {
       setError("Failed to fetch response. Try again.");

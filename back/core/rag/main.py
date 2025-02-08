@@ -1,14 +1,19 @@
 import sys
 import os
-
+import time
 sys.path.append(os.path.abspath(os.path.dirname(__file__)))
 from loader import PDFLoader
 from embeddings import QdrantManager
+from llm_response import generate_llm_response
+from django.conf import settings
 
 
-if __name__ == "__main__":
+def init(document_path,query:str):
+
+    file_path = os.path.join(settings.MEDIA_ROOT, "documents", document_path)
+
     # Load and process the PDF
-    pdf_loader = PDFLoader("/home/ahmed/Desktop/Rag-Chat-App/back/core/rag/LSTM.pdf")
+    pdf_loader = PDFLoader(file_path=file_path)
     pdf_loader.load()
     
     splits = pdf_loader.split_document_into_chunks()
@@ -21,18 +26,17 @@ if __name__ == "__main__":
         qdrant_manager.upsert_documents(splits)
 
         # Perform a search query
-        search_results = qdrant_manager.search("What is LSTM used for?")
+        search_results = qdrant_manager.search(query)
         
         # Extract text from the search results
         top_texts = [result.payload["text"] for result in search_results]
 
-        # Print extracted texts
-        for i, text in enumerate(top_texts, 1):
-            print(f"Result {i}: {text}")
-        else:
-            print("No relevant results found.")
+        generated_response = generate_llm_response(top_texts,query)
+        print("generate",generated_response)
+
 
         # Close the Qdrant client
         qdrant_manager.close()
+        return generated_response
     else:
         print("No document chunks to store.")

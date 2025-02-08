@@ -5,16 +5,13 @@ import { useGetReply } from "../hooks/useGetReply";
 import ErrorMessage from "./Error";
 
 type ChatBoxProps = {
-  fileName?: string | null;
+  file?: File | null;
 };
 
-function ChatBox({ fileName }: ChatBoxProps) {
+function ChatBox({ file }: ChatBoxProps) {
   const context = useContext(MessageContext);
   const [message, setMessage] = useState("");
-  const { sendMessage, loading, error, setError } = useGetReply(
-    context,
-    fileName
-  );
+  const { sendMessage, loading, error, setError } = useGetReply(context, file);
 
   const handleKeyPress = (event: React.KeyboardEvent<HTMLInputElement>) => {
     if (event.key === "Enter") {
@@ -58,9 +55,9 @@ function ChatBox({ fileName }: ChatBoxProps) {
         )}
       </div>
 
-      {fileName && (
+      {file?.name && (
         <p className="mt-2 text-xs text-slate-800 border border-gray-500 p-1 rounded">
-          Current file: {fileName}
+          Current file: {file.name}
         </p>
       )}
     </div>

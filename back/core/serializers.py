@@ -1,12 +1,18 @@
 from rest_framework import serializers
+from .models import Document
 
-class DocumentUploadSerializer(serializers.Serializer):
-    document = serializers.FileField()
+class DocumentSerializer(serializers.ModelSerializer):
 
+    class Meta:
+        model = Document
+        fields = ['file', 'uploaded_at','message']
+        read_only_fields = ['uploaded_at']
+        
     def validate_document(self, value):
         if not value.name.endswith('.pdf'):
             raise serializers.ValidationError("The document must be a PDF file.")
         return value
 
-    class Meta:
-        fields = ['document']
+    def create(self, validated_data):
+        return super().create(validated_data)
+        

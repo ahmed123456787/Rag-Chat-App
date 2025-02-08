@@ -7,10 +7,10 @@ type LayoutProps = {
 };
 
 const Layout = ({ children }: LayoutProps) => {
-  const [fileName, setFileName] = useState<string | null>(null);
+  const [file, setFile] = useState<File | null>(null);
 
-  const handleFileSelect = (info: string | null) => {
-    setFileName(info);
+  const handleFileSelect = (info: File | null) => {
+    setFile(info);
   };
   return (
     <div className="flex w-full bg-gray-200 min-h-screen ">
@@ -20,7 +20,7 @@ const Layout = ({ children }: LayoutProps) => {
       <div className="w-4/5 min-h-screen flex flex-col justify-between">
         <div>{children}</div>
         <div className="p-3 flex items-center justify-center">
-          <ChatBox fileName={fileName} />
+          <ChatBox file={file} />
         </div>
       </div>
     </div>

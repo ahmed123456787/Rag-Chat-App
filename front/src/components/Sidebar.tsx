@@ -1,12 +1,12 @@
 type SidebarProps = {
-  onFileSelect?: (fileName: string | null) => void;
+  onFileSelect?: (fileName: File | null) => void;
 };
 
 const Sidebar = ({ onFileSelect }: SidebarProps) => {
   const handleFileChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     if (event.target.files && event.target.files.length > 0) {
       const file = event.target.files[0];
-      onFileSelect?.(file.name);
+      onFileSelect?.(file);
     }
   };
   return (
