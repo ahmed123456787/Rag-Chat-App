@@ -1,12 +1,15 @@
 from together import Together
 import logging
+import os
+
+SECRET_KEY = os.environ.get("API_KEY")
 
 # Set up logging
 logging.basicConfig(level=logging.INFO)
 logger = logging.getLogger(__name__)
 
 # Initialize Together client
-client = Together(api_key="6b15da7f57fa038bfa3f954c088b2ed88f72ffeecc77502bb0c80d23784a3395")
+client = Together(api_key="")
 
 def generate_llm_response(context, query):
     """Generate an LLM response using Together API."""
